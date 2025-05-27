@@ -251,3 +251,31 @@ e2e_pdu!(
         pub struct LDAPString(pub Utf8String);
                            "#
 );
+
+e2e_pdu!(
+    automatic_tags_in_tagged_choice,
+    r#"
+    TestResponse1 ::= CHOICE {
+        ok INTEGER,
+        error INTEGER
+    }
+    TestResponse2 ::= [42] CHOICE {
+        ok INTEGER,
+        error INTEGER
+    }
+    "#,
+    r#"
+    #[derive(AsnType, Debug, Clone, Decode, Encode, PartialEq, Eq, Hash)]
+    #[rasn(choice, automatic_tags)]
+    pub enum TestResponse1 {
+        ok(Integer),
+        error(Integer),
+    }
+    #[derive(AsnType, Debug, Clone, Decode, Encode, PartialEq, Eq, Hash)]
+    #[rasn(choice, tag(context, 42), automatic_tags)]
+    pub enum TestResponse2 {
+        ok(Integer),
+        error(Integer),
+    }
+    "#
+);

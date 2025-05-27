@@ -613,14 +613,13 @@ impl Rasn {
                     #[non_exhaustive]}
                 })
                 .unwrap_or_default();
-            let mut annotations = vec![
-                quote!(choice),
-                self.format_tag(
-                    tld.tag.as_ref(),
-                    self.tagging_environment == TaggingEnvironment::Automatic
-                        && !choice.options.iter().any(|o| o.tag.is_some()),
-                ),
-            ];
+            let mut annotations = vec![quote!(choice), self.format_tag(tld.tag.as_ref(), false)];
+            if self.tagging_environment == TaggingEnvironment::Automatic
+                && !choice.options.iter().any(|o| o.tag.is_some())
+            {
+                annotations.push(quote!(automatic_tags));
+            }
+
             if name.to_string() != tld.name {
                 annotations.push(self.format_identifier_annotation(
                     &tld.name,
