@@ -301,11 +301,7 @@ impl Rasn {
         Ok(quote!(#(#enumerals)*))
     }
 
-    pub(crate) fn format_tag(
-        &self,
-        tag: Option<&AsnTag>,
-        fallback_to_automatic: bool,
-    ) -> TokenStream {
+    pub(crate) fn format_tag(&self, tag: Option<&AsnTag>) -> TokenStream {
         if let Some(tag) = tag {
             let class = match tag.tag_class {
                 TagClass::Universal => quote!(universal),
@@ -319,8 +315,6 @@ impl Rasn {
             } else {
                 quote!(tag(#class, #id))
             }
-        } else if fallback_to_automatic {
-            quote!(automatic_tags)
         } else {
             TokenStream::new()
         }
@@ -537,7 +531,7 @@ impl Rasn {
             extension_annotation,
             range_annotations,
             alphabet_annotations,
-            self.format_tag(member.tag(), false),
+            self.format_tag(member.tag()),
         ];
         if let Some(default) = default_annotation {
             annotation_items.push(default);
@@ -1324,7 +1318,7 @@ impl Rasn {
         tld: &ToplevelTypeDefinition,
     ) -> Result<(TokenStream, Vec<TokenStream>), GeneratorError> {
         let name = self.to_rust_title_case(&tld.name);
-        let mut annotations = vec![quote!(delegate), self.format_tag(tld.tag.as_ref(), false)];
+        let mut annotations = vec![quote!(delegate), self.format_tag(tld.tag.as_ref())];
 
         if name.to_string() != tld.name {
             annotations.push(self.format_identifier_annotation(&tld.name, &tld.comments, &tld.ty));
@@ -1516,8 +1510,7 @@ mod tests {
                                 tag_class: crate::intermediate::TagClass::Application,
                                 environment: crate::intermediate::TaggingEnvironment::Explicit,
                                 id: 3,
-                            }),
-                            false,
+                            })
                         ),
                     ],
                     false,
