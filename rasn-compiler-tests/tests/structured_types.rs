@@ -187,3 +187,45 @@ e2e_pdu!(
         }
     "#
 );
+
+e2e_pdu!(
+    automatic_tags_on_sequence,
+    r#"
+        T ::= SEQUENCE { a INTEGER, b BOOLEAN, c OCTET STRING }
+    "#
+);
+
+e2e_pdu!(
+    automatic_tags_on_tagged_sequence,
+    r#"
+        T ::= [7] SEQUENCE { a INTEGER, b BOOLEAN, c OCTET STRING }
+    "#
+);
+
+e2e_pdu!(
+    no_automatic_tags_on_sequence_with_tagged_member,
+    r#"
+        T ::= SEQUENCE { a INTEGER, b [1] BOOLEAN, c OCTET STRING }
+    "#
+);
+
+e2e_pdu!(
+    automatic_tags_on_choice,
+    r#"
+        T ::= CHOICE { a INTEGER, b BOOLEAN, c OCTET STRING }
+    "#
+);
+
+e2e_pdu!(
+    automatic_tags_on_tagged_choice,
+    r#"
+        T ::= [7] CHOICE { a INTEGER, b BOOLEAN, c OCTET STRING }
+    "#
+);
+
+e2e_pdu!(
+    no_automatic_tags_on_choice_with_tagged_member,
+    r#"
+        T ::= CHOICE { a INTEGER, b [1] BOOLEAN, c OCTET STRING }
+    "#
+);
