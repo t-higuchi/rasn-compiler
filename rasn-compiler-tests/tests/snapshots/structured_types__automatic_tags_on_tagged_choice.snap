@@ -16,7 +16,7 @@ pub mod test_module {
     use rasn::prelude::*;
     use std::sync::LazyLock;
     #[derive(AsnType, Debug, Clone, Decode, Encode, PartialEq, Eq, Hash)]
-    #[rasn(choice, tag(context, 7), automatic_tags)]
+    #[rasn(choice, tag(explicit(context, 7)), automatic_tags)]
     pub enum T {
         a(Integer),
         b(bool),
